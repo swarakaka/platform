@@ -28,6 +28,13 @@ abstract class Screen extends Controller
     use Commander;
 
     /**
+     * The default layout to the screen.
+     *
+     * @var string
+     */
+    public static $layout = 'platform::layouts.base';
+    
+    /**
      * The number of predefined arguments in the route.
      *
      * Example: dashboard/my-screen/{method?}
@@ -39,7 +46,7 @@ abstract class Screen extends Controller
      */
     protected function screenBaseView(): string
     {
-        return 'platform::layouts.base';
+        return static::$layout;
     }
 
     /**
