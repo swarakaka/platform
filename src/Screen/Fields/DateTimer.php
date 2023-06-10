@@ -29,7 +29,7 @@ use Orchid\Screen\Field;
  * @method DateTimer popover(string $value = null)
  * @method DateTimer allowEmpty(bool $enabled = true)
  * @method DateTimer title(string $value = null)
- * @method DateTimer lang(string $value = null)
+ * @method DateTimer locale(string $value = null)
  */
 class DateTimer extends Field
 {
@@ -60,7 +60,7 @@ class DateTimer extends Field
         'data-datetime-show-months'             => 1,
         'allowEmpty'                            => false,
         'placeholder'                           => 'Select Date...',
-        'lang'                                  => '',
+        'locale'                                  => '',
     ];
 
     /**
