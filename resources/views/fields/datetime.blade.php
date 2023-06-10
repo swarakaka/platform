@@ -1,6 +1,6 @@
 @component($typeForm, get_defined_vars())
     <div data-controller="datetime"
-         data-datetime-locale="{{$lang ?? ''}}"
+         data-datetime-locale="{{$locale ?? ''}}"
          class="input-group"
         {{ $dataAttributes }}>
         <input type="text"
