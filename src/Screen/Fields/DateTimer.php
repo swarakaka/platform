@@ -60,6 +60,7 @@ class DateTimer extends Field
         'data-datetime-show-months'             => 1,
         'allowEmpty'                            => false,
         'placeholder'                           => 'Select Date...',
+        'lang'                                  => '',
     ];
 
     /**
