@@ -12,7 +12,7 @@ use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
 
-class ExampleCardsScreen extends TestBaseScreen
+class ExampleCardsScreen extends Screen
 {
     /**
      * Fetch data to be displayed on the screen.

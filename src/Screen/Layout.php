@@ -103,7 +103,7 @@ abstract class Layout implements JsonSerializable
      */
     public function findBySlug(string $slug)
     {
-        if ($this->getSlug() === $slug) {
+        if ($slug === $this->getSlug()) {
             return $this;
         }
 
@@ -118,7 +118,25 @@ abstract class Layout implements JsonSerializable
                 return $layout->findBySlug($slug);
             })
             ->filter()
-            ->filter(static fn ($layout) => $layout->getSlug() === $slug)
+            ->filter(static fn ($layout) => $slug === $layout->getSlug())
+            ->first();
+    }
+
+    /**
+     * @return Layout|null
+     */
+    public function findByType(string $type)
+    {
+        if (is_subclass_of($this, $type)) {
+            return $this;
+        }
+
+        // Trying to find the right layer inside
+        return collect($this->layouts)
+            ->flatten()
+            ->map(fn ($layout) => is_object($layout) ? $layout : resolve($layout))
+            ->map(fn (Layout $layout) => $layout->findByType($type))
+            ->filter()
             ->first();
     }
 

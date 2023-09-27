@@ -5,6 +5,142 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 14.14.0 - 2023-09-22
+
+### Changed
+- Revert `percent` value from `Charts`
+
+## 14.13.0 - 2023-09-21
+
+### Changed
+- Added `percent` value from `Charts`
+
+## 14.12.2 - 2023-09-20
+
+### Fixed
+- Overflow icons on the main menu 
+- Menu height on mobile
+
+## 14.12.1 - 2023-09-20
+
+### Added
+- `isImpersonating` alias method for `Impersonation` class 
+- Tests from `Sortable` feature
+
+### Fixed
+- Overflow icons on the main menu
+
+## 14.12.0 - 2023-09-14
+
+### Added
+- New `Sortable` layout and `Sortable` helpers trait
+- Support `Enum` for `relation` field [#2711](https://github.com/orchidsoftware/platform/pull/2711)
+
+## 14.11.0 - 2023-09-10
+
+### Added
+- Translation Polish language [#2708](https://github.com/orchidsoftware/platform/pull/2708)
+
+### Fixed
+- Remove "\r\n" `Quill` editor when usage code block
+
+## 14.10.0 - 2023-09-06
+
+### Added
+- Support `enum` feature from `Select` field [#2699](https://github.com/orchidsoftware/platform/pull/2699)
+
+### Changed
+- Improve small legend template
+
+### Fixed
+- Remove overview on form tag [#2702](https://github.com/orchidsoftware/platform/issues/2702)
+
+## 14.9.1 - 2023-08-30
+
+### Fixed 
+- Implemented support for validating redirect requests, resolving the lack of a mechanism to verify them previously
+
+## 14.9.0 - 2023-08-29
+
+### Added
+- Early implementation of `Attach` field.
+
+### Changed
+- Renamed translation from `zh` to `zh_CN` to improve consistency. ([#2692](https://github.com/orchidsoftware/platform/pull/2692))
+- Updated configuration to address the image display issue. ([#2701](https://github.com/orchidsoftware/platform/issues/2701))
+
+### Fixed
+- Resolved the shadow issue in the `Block` layout.
+
+## 14.8.1 - 2023-08-04
+
+### Changed
+- Removed `null` parameters from `Actions`
+
+### Fixed
+- Hiding modal placeholder on screen size <768px [#2686](https://github.com/orchidsoftware/platform/pull/2686)
+
+
+## 14.8.0 - 2023-07-29
+
+### Added
+- Make accordion items stay open when another item is opened. [#2677](https://github.com/orchidsoftware/platform/pull/2677)
+
+### Changed
+- Improving Filter and support pattern parameters [#2684](https://github.com/orchidsoftware/platform/pull/2684)
+
+### Fixed
+- Missing `bs` in popover data attributes [#2667](https://github.com/orchidsoftware/platform/pull/2667)
+
+## 14.7.0 - 2023-07-28
+
+### Added
+- Added japanese translation
+
+### Changed
+- Update arabic translation
+
+### Fixed
+- Display of markdown editor in tabs
+
+## 14.6.0 - 2023-07-12
+
+### Added 
+- Extend cell types [#2129](https://github.com/orchidsoftware/platform/issues/2129)
+- Added 'download' method as alias for 'rawClick' method for Button
+- Added 'usingComponent' method that allows you to pass a cell value to a component
+
+### Fixed 
+- Can't upload the same image twice [#2664](https://github.com/orchidsoftware/platform/issues/2664) [#2666](https://github.com/orchidsoftware/platform/pull/2666)
+- Align for `Impersonate` page error
+- Form validate on profile stub
+- Mobile view header title align
+
+## 14.5.0 - 2023-07-05
+
+### Changed
+- Automatic detection of the need to transmission state
+
+## 14.4.0 - 2023-06-21
+
+### Added
+- Show placeholder when loading request for modal
+
+### Fixed 
+- Overview hidden filter when usage full workspace [#2639](https://github.com/orchidsoftware/platform/issues/2639)
+- Mobile menu when not open [#2646](https://github.com/orchidsoftware/platform/pull/2646)
+
+## 14.3.0 - 2023-06-19
+
+### Added
+- Translation of the delete row button in the "matrix" field [#2641](https://github.com/orchidsoftware/platform/pull/2641)
+
+### Changed
+- Passing values to the state when unpacking only for public properties [#2642](https://github.com/orchidsoftware/platform/issues/2642)
+
+### Fixed
+- Overview hidden filter [#2639](https://github.com/orchidsoftware/platform/issues/2639)
+
 ## 14.2.1 - 2023-06-12
 
 ### Fixed

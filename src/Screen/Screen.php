@@ -13,8 +13,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
-use Laravel\SerializableClosure\SerializableClosure;
 use Orchid\Platform\Http\Controllers\Controller;
+use Orchid\Screen\Layouts\Listener;
 use Orchid\Support\Facades\Dashboard;
 
 /**
@@ -168,7 +168,7 @@ abstract class Screen extends Controller
         $repository = $layout->handle($state, $request);
 
         $view = $layout->build($repository).view('platform::partials.state', [
-            'state' => $this->serializableState($state),
+            'state' => $this->serializeStateWithPublicProperties($state),
         ]);
 
         return response($view)
@@ -188,22 +188,15 @@ abstract class Screen extends Controller
     protected function extractState(): Repository
     {
         // Check if the '_state' parameter is missing
-        if (request()->missing('_state') && session()->missing('_state')) {
+        if (! request()->request->has('_state') && session()->missing('_state')) {
             // Return an empty Repository object
             return new Repository();
         }
 
-        $raw = request()->get('_state') ?? session()->get('_state');
-
         // Extract the encrypted state from the '_state' parameter, and deserialize it
-        $data = config('platform.state.crypt', false) === true
-            ? Crypt::decryptString($raw)
-            : base64_decode($raw);
+        $raw = request()->post('_state') ?? session()->get('_state');
 
-        $state = unserialize($data);
-
-        // Return the deserialized state
-        return $state();
+        return Crypt::decrypt($raw);
     }
 
     /**
@@ -224,24 +217,24 @@ abstract class Screen extends Controller
             'layouts'                 => $this->build($repository),
             'formValidateMessage'     => $this->formValidateMessage(),
             'needPreventsAbandonment' => $this->needPreventsAbandonment(),
-            'state'                   => $this->serializableState($repository),
+            'state'                   => $this->serializeStateWithPublicProperties($repository),
         ]);
     }
 
     /**
-     * @param $values
+     * @param $repository
      *
      * @throws \Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException
      *
      * @return string
      */
-    protected function serializableState($values): string
+    protected function serializableState(Repository $repository): string
     {
-        $state = serialize(new SerializableClosure(fn () => $values));
+        if ($repository->isEmpty()) {
+            return '';
+        }
 
-        return config('platform.state.crypt', false) === true
-            ? Crypt::encryptString($state)
-            : base64_encode($state);
+        return Crypt::encrypt($repository);
     }
 
     /**
@@ -260,18 +253,50 @@ abstract class Screen extends Controller
     }
 
     /**
-     * @param \Orchid\Screen\Repository $repository
+     * Serializes the state of the object using the public properties specified in the given repository.
+     *
+     * @param \Orchid\Screen\Repository $repository The repository containing the public properties to be serialized.
+     *
+     * @throws \Laravel\SerializableClosure\Exceptions\PhpVersionNotSupportedException
+     *
+     * @return string The serialized state of the object.
+     */
+    public function serializeStateWithPublicProperties(Repository $repository): string
+    {
+        if ($this->isScreenFullStatePreserved()) {
+            return $this->serializableState($repository);
+        }
+
+        $propertiesToSerialize = $repository->getMany($this->getPublicPropertyNames()->toArray());
+
+        return $this->serializableState(new Repository($propertiesToSerialize));
+    }
+
+    /**
+     * Fills the public properties of the object with values from the given repository.
+     *
+     * @param \Orchid\Screen\Repository $repository The repository containing the values to fill the properties with.
      *
      * @return void
      */
     protected function fillPublicProperty(Repository $repository): void
     {
+        $this->getPublicPropertyNames()
+            ->each(fn (string $property) => $this->$property = $repository->get($property, $this->$property));
+    }
+
+    /**
+     * Retrieves the names of all public properties of the object.
+     *
+     * @return \Illuminate\Support\Collection The names of the public properties.
+     */
+    protected function getPublicPropertyNames(): Collection
+    {
         $reflections = (new \ReflectionClass($this))->getProperties(\ReflectionProperty::IS_PUBLIC);
 
-        collect($reflections)
+        return collect($reflections)
             ->filter(fn (\ReflectionProperty $property) => ! $property->isStatic())
-            ->map(fn (\ReflectionProperty $property) => $property->getName())
-            ->each(fn (string $key) => $this->$key = $repository->get($key, $this->$key));
+            ->map(fn (\ReflectionProperty $property) => $property->getName());
     }
 
     /**
@@ -348,6 +373,22 @@ abstract class Screen extends Controller
     public function needPreventsAbandonment(): bool
     {
         return config('platform.prevents_abandonment', true);
+    }
+
+    /**
+     * Check if the screen state preservation feature is enabled.
+     * Returns true if enabled, false otherwise.
+     */
+    public function isScreenFullStatePreserved(): bool
+    {
+        /** @var Layout $layout */
+        $existListenerLayout = collect($this->layout())
+            ->map(fn ($layout) => is_object($layout) ? $layout : resolve($layout))
+            ->map(fn (Layout $layout) => $layout->findByType(Listener::class))
+            ->filter()
+            ->isNotEmpty();
+
+        return config('platform.full_state', $existListenerLayout);
     }
 
     /**

@@ -37,9 +37,9 @@ class TimeCollection extends Collection
         $closure = $closure ?? static fn ($label) => $label;
 
         return [
-            'name'   => $name,
-            'labels' => $this->pluck('label')->map($closure)->toArray(),
-            'values' => $this->pluck('value')->toArray(),
+            'name'    => $name,
+            'labels'  => $this->pluck('label')->map($closure)->toArray(),
+            'values'  => $this->pluck('value')->toArray(),
         ];
     }
 
@@ -84,6 +84,18 @@ class TimeCollection extends Collection
             $value['label'] = $callback($value);
 
             return $value;
+        });
+    }
+
+    /**
+     * Delete segment if at least one of the values is missing.
+     *
+     * @return TimeCollection
+     */
+    public function withoutZeroValues(): TimeCollection
+    {
+        return $this->filter(function (array $item) {
+            return $item['value'] !== 0;
         });
     }
 }

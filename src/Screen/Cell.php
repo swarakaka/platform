@@ -13,7 +13,7 @@ use Orchid\Support\Blade;
 
 abstract class Cell
 {
-    use Macroable, CanSee;
+    use CanSee, Macroable;
 
     /**
      * @var string
@@ -130,7 +130,6 @@ abstract class Cell
     /**
      * Pass only the cell value to the component
      *
-     *
      * @throws \ReflectionException
      *
      * @return $this
@@ -141,11 +140,26 @@ abstract class Cell
     }
 
     /**
+     * Pass only the cell value to the component
+     *
+     * @param string $component
+     * @param mixed  ...$params
+     *
+     * @throws \ReflectionException
+     *
+     * @return $this
+     */
+    public function usingComponent(string $component, ...$params): static
+    {
+        return $this->asComponent($component, $params);
+    }
+
+    /**
      * @param Repository|Model $source
      *
      * @return mixed
      */
-    protected function handler($source, ?object $loop = null)
+    protected function handler($source, object $loop = null)
     {
         $callback = $this->render;
 
