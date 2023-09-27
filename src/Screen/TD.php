@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Orchid\Screen;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -17,6 +18,17 @@ use Orchid\Screen\Fields\Select;
 
 class TD extends Cell
 {
+
+    /**
+     * @var boolean
+     */
+    protected bool $isDate = false;
+
+    /**
+     * @var string
+     */
+    protected string $dateFormat = 'Y-m-d';
+
     /**
      * Align the cell to the left.
      */
@@ -253,9 +265,11 @@ class TD extends Cell
      *
      * @return Factory|View
      */
-    public function buildTd($repository, ?object $loop = null)
+    public function buildTd($repository, object $loop = null)
     {
-        $value = $this->render ? $this->handler($repository, $loop) : $repository->getContent($this->name);
+        $prop = $this->render ? $this->handler($repository, $loop) : $repository->getContent($this->name);
+
+        $value = $this->formatAsDate($prop);
 
         return view('platform::partials.layouts.td', [
             'align'   => $this->align,
@@ -365,5 +379,27 @@ class TD extends Cell
         }
 
         return $filter;
+    }
+
+    public function date($format = null)
+    {
+        if ($format){
+            $this->dateFormat = $format;
+        }
+
+        $this->isDate = true;
+
+        return $this;
+    }
+
+    protected function formatAsDate($prop)
+    {
+        if (filled($prop) && $this->isDate) {
+            if (! ($prop instanceof \DateTimeInterface)) {
+                $key = Carbon::parse($prop);
+            }
+            return $key->format($this->dateFormat);
+        }
+        return $prop;
     }
 }
