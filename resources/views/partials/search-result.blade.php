@@ -7,7 +7,11 @@
     @endempty
 
     @foreach ($group['result'] as $item)
-        <div class="p-2 list-group-item-action d-flex gap-3 align-items-start position-relative rounded overflow-hidden">
+        <div
+            tabindex="0"
+            data-search-item
+            data-action="keydown->search#keydown"
+            class="p-2 search-result-item d-flex gap-3 align-items-start position-relative rounded overflow-hidden">
 
             @empty(!$item->image())
                 <div class="thumb-sm rounded overflow-hidden">

@@ -18,30 +18,29 @@
             </div>
 
             <div class="modal-body p-4 py-4">
-                <div data-controller="search-docs">
-                    <div class="position-relative d-flex flex-column gap-3" data-controller="search">
-                        <div class="input-icon">
-                            <input
-                                data-action="input->search#query focus->search#focus blur->search#blur"
-                                data-search-target="query"
-                                autocomplete="off"
-                                autofocus
-                                type="text"
-                                value="@yield('search')"
-                                class="form-control"
-                                placeholder="{{ __('What to search...') }}"
-                            >
-                            <div class="input-icon-addon">
-                                <x-orchid-icon path="bs.search"/>
-                            </div>
-                        </div>
-                        <div id="search-result"
-                             data-search-target="result"
-                             class="d-flex flex-column gap-2 list-group">
+                <div class="position-relative d-flex flex-column gap-3"
+                     data-controller="search"
+                >
+                    <div class="input-icon">
+                        <input
+                            data-action="input->search#query focus->search#focus blur->search#blur keydown->search#keydown"
+                            data-search-target="query"
+                            autocomplete="off"
+                            autofocus
+                            type="text"
+                            value="@yield('search')"
+                            class="form-control"
+                            placeholder="{{ __('What to search...') }}"
+                        >
+                        <div class="input-icon-addon">
+                            <x-orchid-icon path="bs.search"/>
                         </div>
                     </div>
+                    <div id="search-result"
+                         data-search-target="result"
+                         class="d-flex flex-column gap-2 list-group">
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>

@@ -3,6 +3,10 @@ import ApplicationController from "./application_controller";
 export default class extends ApplicationController {
     static targets = ["query", "result"];
 
+    connect() {
+        this.index = -1;
+    }
+
     query(event) {
         const query = event.target.value.trim();
 
@@ -45,5 +49,53 @@ export default class extends ApplicationController {
             .catch(() => {
                 this.resultTarget.classList.remove("show");
             });
+    }
+
+
+    keydown(event) {
+        if (!this.items.length) {
+            return;
+        }
+
+        switch (event.key) {
+            case "ArrowDown":
+                event.preventDefault();
+                this.move(1);
+                break;
+
+            case "ArrowUp":
+                event.preventDefault();
+                this.move(-1);
+                break;
+
+            case "Enter":
+                this.open();
+                break;
+        }
+    }
+
+    move(step) {
+        this.index += step;
+
+        if (this.index < 0) {
+            this.index = this.items.length - 1;
+        }
+
+        if (this.index >= this.items.length) {
+            this.index = 0;
+        }
+
+        this.items[this.index].focus();
+        //this.items.forEach(el => el.classList.remove("active"));
+        //this.items[this.index].classList.add("active");
+    }
+
+    open() {
+        const link = this.items[this.index]?.querySelector("a");
+        link?.click();
+    }
+
+    get items() {
+        return Array.from(this.resultTarget.querySelectorAll("[data-search-item]"));
     }
 }
