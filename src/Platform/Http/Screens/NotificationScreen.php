@@ -17,20 +17,6 @@ use Orchid\Support\Facades\Toast;
 class NotificationScreen extends Screen
 {
     /**
-     * Display header name.
-     *
-     * @var string
-     */
-    public $name = 'Notifications';
-
-    /**
-     * Display header description.
-     *
-     * @var string
-     */
-    public $description = 'Important events you follow';
-
-    /**
      * @var string
      */
     public $permission = 'platform.index';
@@ -59,6 +45,26 @@ class NotificationScreen extends Screen
             'hasUnread'     => $this->prepareUserNotificationRelation($user)->unread()->exists(),
             'notifications' => $this->prepareUserNotificationRelation($user)->paginate(10),
         ];
+    }
+
+    /**
+     * Display header name.
+     *
+     * @return string
+     */
+    public function name(): string
+    {
+        return 'Notifications';
+    }
+
+    /**
+     * Display header description.
+     *
+     * @return string
+     */
+    public function description(): string
+    {
+        return 'Important events you follow';
     }
 
     /**
