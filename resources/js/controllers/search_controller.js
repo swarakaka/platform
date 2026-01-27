@@ -11,22 +11,10 @@ export default class extends ApplicationController {
         const query = event.target.value.trim();
 
         if (query === "") {
-            this.resultTarget.classList.remove("show");
             return;
         }
 
         this.fetchResults(query);
-    }
-
-    blur() {
-        setTimeout(() => this.resultTarget.classList.remove("show"), 140);
-    }
-
-    focus(event) {
-        const query = event.target.value.trim();
-        if (query !== "") {
-            this.fetchResults(query);
-        }
     }
 
     fetchResults(query) {
@@ -44,10 +32,10 @@ export default class extends ApplicationController {
                 }
 
                 this.resultTarget.innerHTML = html;
-                this.resultTarget.classList.add("show");
+                this.resultTarget.classList.remove("d-none");
             })
             .catch(() => {
-                this.resultTarget.classList.remove("show");
+                this.toast("Error fetching search results");
             });
     }
 
@@ -86,8 +74,6 @@ export default class extends ApplicationController {
         }
 
         this.items[this.index].focus();
-        //this.items.forEach(el => el.classList.remove("active"));
-        //this.items[this.index].classList.add("active");
     }
 
     open() {
