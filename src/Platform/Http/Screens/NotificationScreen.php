@@ -96,9 +96,7 @@ class NotificationScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::wrapper('platform::partials.notification-wrap', [
-                'table' => NotificationTable::class,
-            ]),
+            NotificationTable::class
         ];
     }
 
@@ -147,7 +145,7 @@ class NotificationScreen extends Screen
 
         Toast::info(__('All messages have been deleted.'));
 
-        return back();
+        return back()->withInput();
     }
 
     /**
